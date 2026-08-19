@@ -21,7 +21,14 @@ const createPost = catchAsync(async(req:Request, res:Response, next:NextFunction
 
 const getAllPost = catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
 
-              const user  = await postService.getAllPost()
+              const page = Number(req.query.page) || 1;
+              const limit = Number(req.query.limit) || 10;
+              const search = (req.query.search as string)|| "";
+              const isFeatured = req.query.isFeatured ? req.query.isFeatured ==="true" : undefined;
+              const tags = req.query.tags ? (req.query.tags as string).split(",") : [];
+              const sort = (req.query.sort as string) || ""
+
+              const user  = await postService.getAllPost({page, limit, search, isFeatured, tags, sort })
                
               sentResponse(res,{
                          success:true,
